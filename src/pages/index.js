@@ -1,19 +1,44 @@
-import React from 'react'
-import { Link } from 'gatsby'
+import React from 'react';
+import { graphql } from 'gatsby';
+import Img from 'gatsby-image';
 
-import Layout from '../components/layout'
-import Image from '../components/image'
+import Layout from '../components/layout';
 
-const IndexPage = () => (
+const IndexPage = ({ data }) => (
   <Layout>
-    <h1>Hi people</h1>
-    <p>Welcome to your new Gatsby site.</p>
-    <p>Now go build something great.</p>
-    <div style={{ maxWidth: '300px', marginBottom: '1.45rem' }}>
-      <Image />
-    </div>
-    <Link to="/page-2/">Go to page 2</Link>
+    {data.allImageSharp.edges.map(({ node }) => (
+      <div>
+        <Img fluid={node.fluid} />
+        <h3>{node.fluid.originalName}</h3>
+      </div>
+    ))}
   </Layout>
-)
+);
 
-export default IndexPage
+export default IndexPage;
+
+export const pageQuery = graphql`
+  query ListAllImages {
+    allImageSharp {
+      edges {
+        node {
+          id
+          fluid {
+            base64
+            tracedSVG
+            aspectRatio
+            src
+            srcSet
+            srcWebp
+            srcSetWebp
+            sizes
+            originalImg
+            originalName
+            presentationWidth
+            presentationHeight
+          }
+        }
+      }
+    }
+  }
+`;
